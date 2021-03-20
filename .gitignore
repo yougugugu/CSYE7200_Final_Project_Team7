@@ -1,0 +1,14 @@
+*.class
+*.log
+
+target/
+project/target/
+api/
+
+*.iml
+.idea
+
+output\.html
+/CSYEoutput.html
+/.bsp/
+sbt.json
