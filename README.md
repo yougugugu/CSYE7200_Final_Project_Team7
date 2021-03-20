@@ -1,4 +1,4 @@
-# CSYE7200_Final_Project
+# CSYE7200_Final_Project_Team7
 
 Team member:
 
