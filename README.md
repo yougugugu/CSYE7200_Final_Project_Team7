@@ -1,4 +1,4 @@
-# CSYE7200_Final_Project
+# CSYE7200_Final_Project_Team7
 
 Team member:
 
@@ -8,5 +8,7 @@ Team member:
 | Lin Zhu     | 001066973 |
 | Yihao Gu    | 001305641 |
 
+
 wow
+
 
