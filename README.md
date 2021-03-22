@@ -9,7 +9,4 @@ Team member:
 | Yihao Gu    | 001305641 |
 
 
-wow
- 
- MOM
 
