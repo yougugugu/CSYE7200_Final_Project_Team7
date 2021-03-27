@@ -7,5 +7,3 @@ Team member:
 | Jianchao Li | 001054645 |
 | Lin Zhu     | 001066973 |
 | Yihao Gu    | 001305641 |
-
-
