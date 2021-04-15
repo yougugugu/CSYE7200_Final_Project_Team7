@@ -50,4 +50,3 @@ object ProcessData extends App {
   structures.show()
 
 }
-
