@@ -7,47 +7,48 @@ object ProcessData extends App {
     .master("local[*]")
     .getOrCreate()
 
+  //read all cvs as dataframe
   val bans = spark.read.format("csv")
     .option("header", "true")
     .option("inferSchema", "true")
     .load("src/main/resources/bans.csv")
-  bans.printSchema()
-  bans.show()
+//  bans.printSchema()
+//  bans.show()
 
   val gold = spark.read.format("csv")
     .option("header", "true")
     .option("inferSchema", "true")
     .load("src/main/resources/gold.csv")
-  gold.printSchema()
-  gold.show()
+//  gold.printSchema()
+//  gold.show()
 
   val kills = spark.read.format("csv")
     .option("header", "true")
     .option("inferSchema", "true")
     .load("src/main/resources/kills.csv")
-  kills.printSchema()
-  kills.show()
+//  kills.printSchema()
+//  kills.show()
 
   val matchinfo = spark.read.format("csv")
     .option("header", "true")
     .option("inferSchema", "true")
     .load("src/main/resources/matchinfo.csv")
-  matchinfo.printSchema()
-  matchinfo.show()
+//  matchinfo.printSchema()
+//  matchinfo.show()
 
   val monsters = spark.read.format("csv")
     .option("header", "true")
     .option("inferSchema", "true")
     .load("src/main/resources/monsters.csv")
-  monsters.printSchema()
-  monsters.show()
+//  monsters.printSchema()
+//  monsters.show()
 
   val structures = spark.read.format("csv")
     .option("header", "true")
     .option("inferSchema", "true")
     .load("src/main/resources/structures.csv")
-  structures.printSchema()
-  structures.show()
+//  structures.printSchema()
+//  structures.show()
 
   
   //Team gold difference
@@ -114,22 +115,24 @@ object ProcessData extends App {
                                                       " JOIN adcDiff a ON team.Address = a.Address" +
                                                       " JOIN supDiff s ON team.Address = s.Address")
   goldDiff.createOrReplaceTempView("goldDiff")
-  goldDiff.show()
+//  goldDiff.show()
 
   
   //Blue Monsters
   monsters.createOrReplaceTempView("bmonsters")
 
-  val buldDragon = spark.sql("select Address, Count(Type) AS BlueDragon " +
+  val blueDragon = spark.sql("select Address, Count(Type) AS BlueDragon " +
     "from bmonsters where Time <= 15 AND Team in ('bDragons','bHeralds')" +
-    "group by Address").show()
+    "group by Address")
+//  blueDragon.show()
 
   //Red Monsters
   monsters.createOrReplaceTempView("rmonsters")
 
   val redDragon = spark.sql("select Address,  Count(Type) AS RedDragon " +
     "from rmonsters where Time <= 15 AND Team in ('rDragons','rHeralds')" +
-    "group by Address").show()
+    "group by Address")
+//  redDragon.show()
   
   
   //structure number of each team in each match
@@ -137,15 +140,15 @@ object ProcessData extends App {
   
   val BlueStruc = spark.sql("SELECT Address, COUNT(Type) AS BlueStruc FROM structures WHERE Time <= 15 AND Team IN ('bTowers', 'bInhibs') GROUP BY Address")
   val RedStruc = spark.sql("SELECT Address, COUNT(Type) AS RedStruc FROM structures WHERE Time <= 15 AND Team IN ('rTowers', 'rInhibs') GROUP BY Address")
-  BlueStruc.show()
-  RedStruc.show()
+//  BlueStruc.show()
+//  RedStruc.show()
 
   
   //result of each match
   matchinfo.createOrReplaceTempView("matchinfo")
   
   val MatchResult = spark.sql("SELECT Address, bResult, rResult FROM matchinfo")
-  MatchResult.show()
+//  MatchResult.show()
 
   
   //kills number of each team in each match
@@ -153,7 +156,7 @@ object ProcessData extends App {
   
   val BlueKills = spark.sql("SELECT Address, COUNT(Killer) AS BlueKills FROM kills WHERE Time <= 15 AND Killer != 'TooEarly' AND Team = 'bKills' GROUP BY Address")
   val RedKills = spark.sql("SELECT Address, COUNT(Killer) AS RedKills FROM kills WHERE Time <= 15 AND Killer != 'TooEarly' AND Team = 'rKills' GROUP BY Address")
-  RedKills.show()
+//  RedKills.show()
 
 
 }
