@@ -49,6 +49,7 @@ object ProcessData extends App {
   structures.printSchema()
   structures.show()
 
+  
   //Team gold difference
   gold.createOrReplaceTempView("gold")
 
@@ -115,6 +116,7 @@ object ProcessData extends App {
   goldDiff.createOrReplaceTempView("goldDiff")
   goldDiff.show()
 
+  
   //Blue Monsters
   monsters.createOrReplaceTempView("bmonsters")
 
@@ -128,5 +130,30 @@ object ProcessData extends App {
   val redDragon = spark.sql("select Address,  Count(Type) AS RedDragon " +
     "from rmonsters where Time <= 15 AND Team in ('rDragons','rHeralds')" +
     "group by Address").show()
+  
+  
+  //structure number of each team in each match
+  structures.createOrReplaceTempView("structures")
+  
+  val BlueStruc = spark.sql("SELECT Address, COUNT(Type) AS BlueStruc FROM structures WHERE Time <= 15 AND Team IN ('bTowers', 'bInhibs') GROUP BY Address")
+  val RedStruc = spark.sql("SELECT Address, COUNT(Type) AS RedStruc FROM structures WHERE Time <= 15 AND Team IN ('rTowers', 'rInhibs') GROUP BY Address")
+  BlueStruc.show()
+  RedStruc.show()
+
+  
+  //result of each match
+  matchinfo.createOrReplaceTempView("matchinfo")
+  
+  val MatchResult = spark.sql("SELECT Address, bResult, rResult FROM matchinfo")
+  MatchResult.show()
+
+  
+  //kills number of each team in each match
+  kills.createOrReplaceTempView("kills")
+  
+  val BlueKills = spark.sql("SELECT Address, COUNT(Killer) AS BlueKills FROM kills WHERE Time <= 15 AND Killer != 'TooEarly' AND Team = 'bKills' GROUP BY Address")
+  val RedKills = spark.sql("SELECT Address, COUNT(Killer) AS RedKills FROM kills WHERE Time <= 15 AND Killer != 'TooEarly' AND Team = 'rKills' GROUP BY Address")
+  RedKills.show()
+
 
 }
