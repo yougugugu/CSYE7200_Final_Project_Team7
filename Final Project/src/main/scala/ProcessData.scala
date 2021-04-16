@@ -115,4 +115,18 @@ object ProcessData extends App {
   goldDiff.createOrReplaceTempView("goldDiff")
   goldDiff.show()
 
+  //Blue Monsters
+  monsters.createOrReplaceTempView("bmonsters")
+
+  val buldDragon = spark.sql("select Address, Count(Type) AS BlueDragon " +
+    "from bmonsters where Time <= 15 AND Team in ('bDragons','bHeralds')" +
+    "group by Address").show()
+
+  //Red Monsters
+  monsters.createOrReplaceTempView("rmonsters")
+
+  val redDragon = spark.sql("select Address,  Count(Type) AS RedDragon " +
+    "from rmonsters where Time <= 15 AND Team in ('rDragons','rHeralds')" +
+    "group by Address").show()
+
 }
