@@ -1,8 +1,8 @@
-import org.apache.spark.ml.classification.LinearSVC
+import org.apache.spark.ml.classification.{LogisticRegression, OneVsRest}
 import org.apache.spark.ml.evaluation.BinaryClassificationEvaluator
 import org.apache.spark.ml.feature.VectorAssembler
 
-object SVM {
+object OVR {
   val train = ProcessData.train
   val valid = ProcessData.valid
 
@@ -10,14 +10,18 @@ object SVM {
     .setInputCols(Array("TeamDiff", "TopDiff", "JunDiff", "MidDiff", "ADCDiff", "SupDiff", "Dragons", "Structures", "Kills"))
     .setOutputCol("features")
 
-  val svm = new LinearSVC()
+  val classifier = new LogisticRegression()
     .setMaxIter(10)
-    .setRegParam(0.1)
+    .setTol(1E-6)
+    .setFitIntercept(true)
+
+  val ovr = new OneVsRest()
+    .setClassifier(classifier)
     .setLabelCol("Result")
     .setFeaturesCol("features")
 
   val atrain = assembler.transform(train)
-  val svmModel = svm.fit(atrain)
+  val gbtModel = ovr.fit(atrain)
 
   val evaluator_binary = new BinaryClassificationEvaluator()
     .setLabelCol("Result")
@@ -25,9 +29,8 @@ object SVM {
     .setMetricName("areaUnderROC")
 
   val avalid = assembler.transform(valid)
-  val val_pred = svmModel.transform(avalid)
+  val val_pred = gbtModel.transform(avalid)
   val accu = evaluator_binary.evaluate(val_pred)
   println(accu)
-
 
 }
