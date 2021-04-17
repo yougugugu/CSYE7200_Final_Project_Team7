@@ -1,6 +1,8 @@
 import org.apache.spark.sql.SparkSession
+import org.apache.spark.ml.feature.VectorAssembler
+import org.apache.spark.ml.feature.StandardScaler
 
-object ProcessData{
+object ProcessData {
 
   val spark: SparkSession = SparkSession
     .builder()
@@ -196,4 +198,30 @@ object ProcessData{
   //print(train.count())
   //print(valid.count())
   //spark.close()
+
+  // Feature transforming
+  val assembler = new VectorAssembler()
+    .setInputCols(Array("TeamDiff", "TopDiff", "JunDiff", "MidDiff", "ADCDiff", "SupDiff", "Dragons", "Structures", "Kills"))
+    .setOutputCol("features")
+
+  val assTrain = assembler.transform(train)
+
+  val assValid = assembler.transform(valid)
+
+  val assTest = assembler.transform(test)
+
+  // Standardize
+  val scaler = new StandardScaler()
+    .setInputCol(assembler.getOutputCol)
+    .setOutputCol("scaledFeatures")
+    .setWithStd(true)
+    .setWithMean(true)
+
+  val scalerModel = scaler.fit(assTrain)
+
+  val scaleAssTrain = scalerModel.transform(assTrain)
+
+  val scaleAssValid = scalerModel.transform(assValid)
+
+  val scaleAssTest = scalerModel.transform(assTest)
 }
