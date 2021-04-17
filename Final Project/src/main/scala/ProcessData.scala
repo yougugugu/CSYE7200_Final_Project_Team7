@@ -1,6 +1,6 @@
 import org.apache.spark.sql.SparkSession
 
-object ProcessData extends App {
+object ProcessData {
   val spark: SparkSession = SparkSession
     .builder()
     .appName("ProcessData")
