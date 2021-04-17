@@ -1,8 +1,8 @@
-import org.apache.spark.ml.classification.LinearSVC
-import org.apache.spark.ml.evaluation.BinaryClassificationEvaluator
 import org.apache.spark.ml.feature.VectorAssembler
+import org.apache.spark.ml.classification. GBTClassifier
+import org.apache.spark.ml.evaluation.BinaryClassificationEvaluator
 
-object SVM {
+object GBT {
   val train = ProcessData.train
   val valid = ProcessData.valid
 
@@ -10,14 +10,14 @@ object SVM {
     .setInputCols(Array("TeamDiff", "TopDiff", "JunDiff", "MidDiff", "ADCDiff", "SupDiff", "Dragons", "Structures", "Kills"))
     .setOutputCol("features")
 
-  val svm = new LinearSVC()
-    .setMaxIter(10)
-    .setRegParam(0.1)
+  val gbt = new GBTClassifier()
     .setLabelCol("Result")
     .setFeaturesCol("features")
+    .setMaxIter(10)
+    .setFeatureSubsetStrategy("auto")
 
   val atrain = assembler.transform(train)
-  val svmModel = svm.fit(atrain)
+  val gbtModel = gbt.fit(atrain)
 
   val evaluator_binary = new BinaryClassificationEvaluator()
     .setLabelCol("Result")
@@ -25,9 +25,8 @@ object SVM {
     .setMetricName("areaUnderROC")
 
   val avalid = assembler.transform(valid)
-  val val_pred = svmModel.transform(avalid)
+  val val_pred = gbtModel.transform(avalid)
   val accu = evaluator_binary.evaluate(val_pred)
   println(accu)
-
 
 }
