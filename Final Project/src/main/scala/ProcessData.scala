@@ -1,6 +1,6 @@
 import org.apache.spark.sql.SparkSession
 
-object ProcessData {
+object ProcessData extends App{
   val spark: SparkSession = SparkSession
     .builder()
     .appName("ProcessData")
@@ -184,5 +184,11 @@ object ProcessData {
     " LEFT JOIN redStruc s ON g.Address = s.Address" +
     " LEFT JOIN redKills k ON g.Address = k.Address" +
     " JOIN matchResult r ON g.Address = r.Address")
-  print(predData.count())
+  //print(predData.count())
+
+  val Array(train_valid, test) = predData.randomSplit(Array(0.9, 0.1), seed = 11111)
+  val Array(train, valid) = train_valid.randomSplit(Array(0.7,0.3), seed = 22222)
+  //print(test.count())
+  //print(train.count())
+  //print(valid.count())
 }
