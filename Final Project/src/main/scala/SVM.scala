@@ -1,18 +1,19 @@
-import org.apache.spark.ml.classification.LinearSVC
+import org.apache.spark.ml.classification.{LinearSVC, LinearSVCModel}
+import org.apache.spark.sql.DataFrame
 
-object SVM extends App{
+object SVM {
 
-  val svm = new LinearSVC()
+  val svm: LinearSVC = new LinearSVC()
     .setMaxIter(100)
     .setRegParam(0.1)
     .setLabelCol("Result")
     .setFeaturesCol("features")
 
-  val svmModel = svm.fit(ProcessData.assTrain)
+  val svmModel: LinearSVCModel = svm.fit(ProcessData.assTrain)
 
-  val validPred = svmModel.transform(ProcessData.assValid)
+  val validPred: DataFrame = svmModel.transform(ProcessData.assValid)
 
-  val acc = Evaluator.evaluator_binary.evaluate(validPred)
+  val acc: Double = Evaluator.evaluator_binary.evaluate(validPred)
 
-  println(acc)
+  //println(acc)
 }

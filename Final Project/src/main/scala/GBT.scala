@@ -1,18 +1,19 @@
-import org.apache.spark.ml.classification. GBTClassifier
+import org.apache.spark.ml.classification.{GBTClassificationModel, GBTClassifier}
+import org.apache.spark.sql.DataFrame
 
 object GBT {
 
-  val gbt = new GBTClassifier()
+  val gbt: GBTClassifier = new GBTClassifier()
     .setLabelCol("Result")
     .setFeaturesCol("features")
     .setMaxIter(10)
     .setFeatureSubsetStrategy("auto")
 
-  val gbtModel = gbt.fit(ProcessData.assTrain)
+  val gbtModel: GBTClassificationModel = gbt.fit(ProcessData.assTrain)
 
-  val validPred = gbtModel.transform(ProcessData.assValid)
+  val validPred: DataFrame = gbtModel.transform(ProcessData.assValid)
 
-  val acc = Evaluator.evaluator_binary.evaluate(validPred)
+  val acc: Double = Evaluator.evaluator_binary.evaluate(validPred)
 
   //println(acc)
 }
