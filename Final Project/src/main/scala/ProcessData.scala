@@ -12,45 +12,45 @@ object ProcessData extends App {
     .option("header", "true")
     .option("inferSchema", "true")
     .load("src/main/resources/bans.csv")
-//  bans.printSchema()
-//  bans.show()
+  //  bans.printSchema()
+  //  bans.show()
 
   val gold = spark.read.format("csv")
     .option("header", "true")
     .option("inferSchema", "true")
     .load("src/main/resources/gold.csv")
-//  gold.printSchema()
-//  gold.show()
+  //  gold.printSchema()
+  //  gold.show()
 
   val kills = spark.read.format("csv")
     .option("header", "true")
     .option("inferSchema", "true")
     .load("src/main/resources/kills.csv")
-//  kills.printSchema()
-//  kills.show()
+  //  kills.printSchema()
+  //  kills.show()
 
   val matchinfo = spark.read.format("csv")
     .option("header", "true")
     .option("inferSchema", "true")
     .load("src/main/resources/matchinfo.csv")
-//  matchinfo.printSchema()
-//  matchinfo.show()
+  //  matchinfo.printSchema()
+  //  matchinfo.show()
 
   val monsters = spark.read.format("csv")
     .option("header", "true")
     .option("inferSchema", "true")
     .load("src/main/resources/monsters.csv")
-//  monsters.printSchema()
-//  monsters.show()
+  //  monsters.printSchema()
+  //  monsters.show()
 
   val structures = spark.read.format("csv")
     .option("header", "true")
     .option("inferSchema", "true")
     .load("src/main/resources/structures.csv")
-//  structures.printSchema()
-//  structures.show()
+  //  structures.printSchema()
+  //  structures.show()
 
-  
+
   //Team gold difference
   gold.createOrReplaceTempView("gold")
 
@@ -109,18 +109,18 @@ object ProcessData extends App {
 
   //Combine dataframe
   val goldDiff = spark.sql("SELECT team.Address AS Address, team.teamGoldDiff_15 AS team_15, t.topGoldDiff_15 AS top_15, j.jungleGoldDiff_15 AS jun_15, m.middleGoldDiff_15 AS mid_15, a.adcGoldDiff_15 AS adc_15, s.supportGoldDiff_15 AS sup_15 " +
-                                    "FROM teamDiff team JOIN topDiff t ON team.Address = t.Address" +
-                                                      " JOIN midDiff m ON team.Address = m.Address" +
-                                                      " JOIN junDiff j ON team.Address = j.Address" +
-                                                      " JOIN adcDiff a ON team.Address = a.Address" +
-                                                      " JOIN supDiff s ON team.Address = s.Address")
+    "FROM teamDiff team JOIN topDiff t ON team.Address = t.Address" +
+    " JOIN midDiff m ON team.Address = m.Address" +
+    " JOIN junDiff j ON team.Address = j.Address" +
+    " JOIN adcDiff a ON team.Address = a.Address" +
+    " JOIN supDiff s ON team.Address = s.Address")
   goldDiff.createOrReplaceTempView("goldDiff")
   val redGoldDiff = spark.sql("SELECT Address, team_15 * (-1) AS team_15, top_15 * (-1) AS top_15, jun_15 * (-1) AS jun_15, mid_15 * (-1) AS mid_15, adc_15 * (-1) AS adc_15, sup_15 * (-1) AS sup_15 FROM goldDiff")
   redGoldDiff.createOrReplaceTempView("redGoldDiff")
-//  goldDiff.show()
+  //  goldDiff.show()
   // redGoldDiff.show()
 
-  
+
   //Blue Monsters
   monsters.createOrReplaceTempView("monsters")
 
@@ -128,7 +128,7 @@ object ProcessData extends App {
     "from monsters where Time <= 15 AND Team in ('bDragons','bHeralds')" +
     "group by Address")
   blueDragon.createOrReplaceTempView("blueDragon")
-//  blueDragon.show()
+  //  blueDragon.show()
 
   //Red Monsters
 
@@ -136,31 +136,31 @@ object ProcessData extends App {
     "from monsters where Time <= 15 AND Team in ('rDragons','rHeralds')" +
     "group by Address")
   redDragon.createOrReplaceTempView("redDragon")
-//  redDragon.show()
-  
-  
+  //  redDragon.show()
+
+
   //structure number of each team in each match
   structures.createOrReplaceTempView("structures")
-  
+
   val blueStruc = spark.sql("SELECT Address, COUNT(Type) AS BlueStruc FROM structures WHERE Time <= 15 AND Team IN ('bTowers', 'bInhibs') GROUP BY Address")
   val redStruc = spark.sql("SELECT Address, COUNT(Type) AS RedStruc FROM structures WHERE Time <= 15 AND Team IN ('rTowers', 'rInhibs') GROUP BY Address")
   blueStruc.createOrReplaceTempView("blueStruc")
   redStruc.createOrReplaceTempView("redStruc")
   //  blueStruc.show()
-//  redStruc.show()
+  //  redStruc.show()
 
-  
+
   //result of each match
   matchinfo.createOrReplaceTempView("matchinfo")
-  
+
   val matchResult = spark.sql("SELECT Address, bResult, rResult FROM matchinfo")
   matchResult.createOrReplaceTempView("matchResult")
   //  matchResult.show()
 
-  
+
   //kills number of each team in each match
   kills.createOrReplaceTempView("kills")
-  
+
   val blueKills = spark.sql("SELECT Address, COUNT(Killer) AS BlueKills FROM kills WHERE Time <= 15 AND Killer != 'TooEarly' AND Team = 'bKills' GROUP BY Address")
   val redKills = spark.sql("SELECT Address, COUNT(Killer) AS RedKills FROM kills WHERE Time <= 15 AND Killer != 'TooEarly' AND Team = 'rKills' GROUP BY Address")
   blueKills.createOrReplaceTempView("blueKills")
@@ -168,22 +168,21 @@ object ProcessData extends App {
   //  RedKills.show()
 
   val predData = spark.sql("SELECT g.team_15 AS TeamDiff, g.top_15 AS TopDiff, g.jun_15 AS JunDiff, g.mid_15 AS MidDiff, g.adc_15 AS ADCDiff, g.sup_15 AS SupDiff, " +
-                                        " CASE WHEN d.BlueDragon IS NULL THEN 0 ELSE d.BlueDragon END AS Dragons," +
-                                        " CASE WHEN s.BlueStruc IS NULL THEN 0 ELSE s.BlueStruc END AS Structures, " +
-                                        " CASE WHEN k.BlueKills IS NULL THEN 0 ELSE k.BlueKills END AS Kills, r.bResult AS Result" +
-                                        " FROM goldDiff g LEFT JOIN blueDragon d ON g.Address = d.Address" +
-                                                          " LEFT JOIN blueStruc s ON g.Address = s.Address" +
-                                                          " LEFT JOIN blueKills k ON g.Address = k.Address" +
-                                                          " JOIN matchResult r ON g.Address = r.Address" +
-                                        " UNION" +
-                                        " SELECT g.team_15 AS TeamDiff, g.top_15 AS TopDiff, g.jun_15 AS JunDiff, g.mid_15 AS MidDiff, g.adc_15 AS ADCDiff, g.sup_15 AS SupDiff, " +
-                                        " CASE WHEN d.RedDragon IS NULL THEN 0 ELSE d.RedDragon END AS Dragons," +
-                                        " CASE WHEN s.RedStruc IS NULL THEN 0 ELSE s.RedStruc END AS Structures, " +
-                                        " CASE WHEN k.RedKills IS NULL THEN 0 ELSE k.RedKills END AS Kills, r.rResult AS Result" +
-                                        " FROM redGoldDiff g LEFT JOIN redDragon d ON g.Address = d.Address" +
-                                        " LEFT JOIN redStruc s ON g.Address = s.Address" +
-                                        " LEFT JOIN redKills k ON g.Address = k.Address" +
-                                        " JOIN matchResult r ON g.Address = r.Address" )
+    " CASE WHEN d.BlueDragon IS NULL THEN 0 ELSE d.BlueDragon END AS Dragons," +
+    " CASE WHEN s.BlueStruc IS NULL THEN 0 ELSE s.BlueStruc END AS Structures, " +
+    " CASE WHEN k.BlueKills IS NULL THEN 0 ELSE k.BlueKills END AS Kills, r.bResult AS Result" +
+    " FROM goldDiff g LEFT JOIN blueDragon d ON g.Address = d.Address" +
+    " LEFT JOIN blueStruc s ON g.Address = s.Address" +
+    " LEFT JOIN blueKills k ON g.Address = k.Address" +
+    " JOIN matchResult r ON g.Address = r.Address" +
+    " UNION" +
+    " SELECT g.team_15 AS TeamDiff, g.top_15 AS TopDiff, g.jun_15 AS JunDiff, g.mid_15 AS MidDiff, g.adc_15 AS ADCDiff, g.sup_15 AS SupDiff, " +
+    " CASE WHEN d.RedDragon IS NULL THEN 0 ELSE d.RedDragon END AS Dragons," +
+    " CASE WHEN s.RedStruc IS NULL THEN 0 ELSE s.RedStruc END AS Structures, " +
+    " CASE WHEN k.RedKills IS NULL THEN 0 ELSE k.RedKills END AS Kills, r.rResult AS Result" +
+    " FROM redGoldDiff g LEFT JOIN redDragon d ON g.Address = d.Address" +
+    " LEFT JOIN redStruc s ON g.Address = s.Address" +
+    " LEFT JOIN redKills k ON g.Address = k.Address" +
+    " JOIN matchResult r ON g.Address = r.Address")
   print(predData.count())
-  //predData.select("*").write.format("csv").save("C:\\Users\\guyih\\OneDrive\\Desktop\\scala\\result")
 }
