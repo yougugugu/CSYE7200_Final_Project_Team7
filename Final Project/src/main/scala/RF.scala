@@ -1,18 +1,19 @@
-import org.apache.spark.ml.classification.RandomForestClassifier
+import org.apache.spark.ml.classification.{RandomForestClassificationModel, RandomForestClassifier}
+import org.apache.spark.sql.DataFrame
 
 object RF {
 
-  val rf = new RandomForestClassifier()
+  val rf: RandomForestClassifier = new RandomForestClassifier()
     .setLabelCol("Result")
     .setFeaturesCol("features")
     .setNumTrees(64)
     .setSeed(3333L)
 
-  val rfModel =rf.fit(ProcessData.assTrain)
+  val rfModel: RandomForestClassificationModel =rf.fit(ProcessData.assTrain)
 
-  val validPred = rfModel.transform(ProcessData.assTrain)
+  val validPred: DataFrame = rfModel.transform(ProcessData.assValid)
 
-  val acc = Evaluator.evaluator_binary.evaluate(validPred)
+  val acc: Double = Evaluator.evaluator_binary.evaluate(validPred)
 
   //println(acc)
 }

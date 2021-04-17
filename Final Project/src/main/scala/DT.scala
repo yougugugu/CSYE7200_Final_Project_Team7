@@ -1,16 +1,17 @@
-import org.apache.spark.ml.classification.DecisionTreeClassifier
+import org.apache.spark.ml.classification.{DecisionTreeClassificationModel, DecisionTreeClassifier}
+import org.apache.spark.sql.DataFrame
 
 object DT {
 
-  val dt = new DecisionTreeClassifier()
+  val dt: DecisionTreeClassifier = new DecisionTreeClassifier()
     .setLabelCol("Result")
     .setFeaturesCol("features")
 
-  val dtModel = dt.fit(ProcessData.assTrain)
+  val dtModel: DecisionTreeClassificationModel = dt.fit(ProcessData.assTrain)
 
-  val validPred = dtModel.transform(ProcessData.assValid)
+  val validPred: DataFrame = dtModel.transform(ProcessData.assValid)
 
-  val acc = Evaluator.evaluator_binary.evaluate(validPred)
+  val acc: Double = Evaluator.evaluator_binary.evaluate(validPred)
 
   //println(acc)
 }
