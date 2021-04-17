@@ -195,5 +195,5 @@ object ProcessData{
   //print(test.count())
   //print(train.count())
   //print(valid.count())
-  spark.close()
+  //spark.close()
 }
