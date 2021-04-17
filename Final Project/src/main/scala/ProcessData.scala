@@ -1,6 +1,6 @@
 import org.apache.spark.sql.SparkSession
 
-object ProcessData extends App{
+object ProcessData{
   val spark: SparkSession = SparkSession
     .builder()
     .appName("ProcessData")
@@ -168,27 +168,30 @@ object ProcessData extends App{
   //  RedKills.show()
 
   val predData = spark.sql("SELECT g.team_15 AS TeamDiff, g.top_15 AS TopDiff, g.jun_15 AS JunDiff, g.mid_15 AS MidDiff, g.adc_15 AS ADCDiff, g.sup_15 AS SupDiff, " +
-    " CASE WHEN d.BlueDragon IS NULL THEN 0 ELSE d.BlueDragon END AS Dragons," +
-    " CASE WHEN s.BlueStruc IS NULL THEN 0 ELSE s.BlueStruc END AS Structures, " +
-    " CASE WHEN k.BlueKills IS NULL THEN 0 ELSE k.BlueKills END AS Kills, r.bResult AS Result" +
+    " CAST(CASE WHEN d.BlueDragon IS NULL THEN 0 ELSE d.BlueDragon END AS integer) AS Dragons," +
+    " CAST(CASE WHEN s.BlueStruc IS NULL THEN 0 ELSE s.BlueStruc END AS integer) AS Structures, " +
+    " CAST(CASE WHEN k.BlueKills IS NULL THEN 0 ELSE k.BlueKills END AS integer) AS Kills, r.bResult AS Result" +
     " FROM goldDiff g LEFT JOIN blueDragon d ON g.Address = d.Address" +
     " LEFT JOIN blueStruc s ON g.Address = s.Address" +
     " LEFT JOIN blueKills k ON g.Address = k.Address" +
     " JOIN matchResult r ON g.Address = r.Address" +
     " UNION" +
     " SELECT g.team_15 AS TeamDiff, g.top_15 AS TopDiff, g.jun_15 AS JunDiff, g.mid_15 AS MidDiff, g.adc_15 AS ADCDiff, g.sup_15 AS SupDiff, " +
-    " CASE WHEN d.RedDragon IS NULL THEN 0 ELSE d.RedDragon END AS Dragons," +
-    " CASE WHEN s.RedStruc IS NULL THEN 0 ELSE s.RedStruc END AS Structures, " +
-    " CASE WHEN k.RedKills IS NULL THEN 0 ELSE k.RedKills END AS Kills, r.rResult AS Result" +
+    " CAST(CASE WHEN d.RedDragon IS NULL THEN 0 ELSE d.RedDragon END AS integer) AS Dragons," +
+    " CAST(CASE WHEN s.RedStruc IS NULL THEN 0 ELSE s.RedStruc END AS integer) AS Structures, " +
+    " CAST(CASE WHEN k.RedKills IS NULL THEN 0 ELSE k.RedKills END AS integer) AS Kills, r.rResult AS Result" +
     " FROM redGoldDiff g LEFT JOIN redDragon d ON g.Address = d.Address" +
     " LEFT JOIN redStruc s ON g.Address = s.Address" +
     " LEFT JOIN redKills k ON g.Address = k.Address" +
     " JOIN matchResult r ON g.Address = r.Address")
   //print(predData.count())
+  // predData.printSchema()
 
-  val Array(train_valid, test) = predData.randomSplit(Array(0.9, 0.1), seed = 11111)
-  val Array(train, valid) = train_valid.randomSplit(Array(0.7,0.3), seed = 22222)
+
+  val Array(train_valid, test) = predData.randomSplit(Array(0.9, 0.1), seed = 11111L)
+  val Array(train, valid) = train_valid.randomSplit(Array(0.7,0.3), seed = 22222L)
   //print(test.count())
   //print(train.count())
   //print(valid.count())
+  spark.close()
 }
