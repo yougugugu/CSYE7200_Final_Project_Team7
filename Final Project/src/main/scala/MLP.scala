@@ -1,45 +1,20 @@
-import org.apache.spark.ml.feature.StandardScaler
-import org.apache.spark.ml.feature.VectorAssembler
-import org.apache.spark.ml.evaluation.BinaryClassificationEvaluator
 import org.apache.spark.ml.classification.MultilayerPerceptronClassifier
+
 object MLP {
-  val train = ProcessData.train
-  val valid = ProcessData.valid
 
-  val assembler = new VectorAssembler()
-    .setInputCols(Array("TeamDiff", "TopDiff", "JunDiff", "MidDiff", "ADCDiff", "Dragons", "Structures", "Kills"))
-    .setOutputCol("features")
-
-  val ttrain = assembler.transform(train)
-
-  val scaler = new StandardScaler()
-    .setInputCol(assembler.getOutputCol)
-    .setOutputCol("scaledFeatures")
-    .setWithStd(true)
-    .setWithMean(true)
-
-  val scalerModel = scaler.fit(ttrain)
-
-  val sttrain = scalerModel.transform(ttrain)
-
-  val trainer = new MultilayerPerceptronClassifier()
+  val mlp = new MultilayerPerceptronClassifier()
     .setLabelCol("Result")
-    .setFeaturesCol("scaledFeatures")
-    .setLayers(Array(8, 7, 6, 5, 4, 3, 2))
+    .setFeaturesCol("features")
+    .setLayers(Array(9, 7, 6, 2))
     .setBlockSize(128)
-    .setSeed(1234L)
+    .setSeed(4444L)
     .setMaxIter(100)
 
-  val model = trainer.fit(sttrain)
+  val mlpModel = mlp.fit(ProcessData.assTrain)
 
-  val evaluator_binary = new BinaryClassificationEvaluator()
-    .setLabelCol("Result")
-    .setRawPredictionCol("rawPrediction")
-    .setMetricName("areaUnderROC")
+  val validPred = mlpModel.transform(ProcessData.assValid)
 
-  val tvalid = assembler.transform(valid)
-  val stvalid = scalerModel.transform(tvalid)
-  val val_pred = model.transform(stvalid)
-  val accur = evaluator_binary.evaluate(val_pred)
-  println(accur)
+  val acc = Evaluator.evaluator_binary.evaluate(validPred)
+
+  //println(acc)
 }
