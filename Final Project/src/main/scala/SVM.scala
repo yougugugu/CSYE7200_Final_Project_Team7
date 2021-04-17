@@ -2,7 +2,7 @@ import org.apache.spark.ml.classification.LinearSVC
 import org.apache.spark.ml.evaluation.BinaryClassificationEvaluator
 import org.apache.spark.ml.feature.VectorAssembler
 
-object SVM extends App {
+object SVM {
   val train = ProcessData.train
   val valid = ProcessData.valid
   val test = ProcessData.test
