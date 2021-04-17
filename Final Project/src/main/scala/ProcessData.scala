@@ -1,6 +1,6 @@
 import org.apache.spark.sql.SparkSession
 
-object ProcessData extends App{
+object ProcessData {
   val spark: SparkSession = SparkSession
     .builder()
     .appName("ProcessData")
@@ -187,7 +187,7 @@ object ProcessData extends App{
   //print(predData.count())
 
   val Array(train_valid, test) = predData.randomSplit(Array(0.9, 0.1), seed = 11111)
-  val Array(train, valid) = train_valid.randomSplit(Array(0.7,0.3), seed = 22222)
+  val Array(train, valid) = train_valid.randomSplit(Array(0.7, 0.3), seed = 22222)
   //print(test.count())
   //print(train.count())
   //print(valid.count())
