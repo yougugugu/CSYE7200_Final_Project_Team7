@@ -187,7 +187,7 @@ object ProcessData {
   //print(predData.count())
 
   val Array(train_valid, test) = predData.randomSplit(Array(0.9, 0.1), seed = 11111)
-  val Array(train, valid) = train_valid.randomSplit(Array(0.7,0.3), seed = 22222)
+  val Array(train, valid) = train_valid.randomSplit(Array(0.7, 0.3), seed = 22222)
   //print(test.count())
   //print(train.count())
   //print(valid.count())
