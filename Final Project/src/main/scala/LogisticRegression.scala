@@ -1,7 +1,8 @@
 import org.apache.spark.ml.classification.LogisticRegression
+import org.apache.spark.ml.evaluation.BinaryClassificationEvaluator
 import org.apache.spark.ml.feature.VectorAssembler
 
-object LogisticRegression extends App {
+object LogisticRegression {
   val train = ProcessData.train
   val valid = ProcessData.valid
   val assembler = new VectorAssembler()
@@ -16,6 +17,14 @@ object LogisticRegression extends App {
   val trainData = assembler.transform(train)
   val validData = assembler.transform(valid)
   val lrModel = lr.fit(trainData)
-  val acc = lrModel.evaluate(validData).accuracy
-  print(acc)
+
+  val evaluator_binary = new BinaryClassificationEvaluator()
+    .setLabelCol("Result")
+    .setRawPredictionCol("rawPrediction")
+    .setMetricName("areaUnderROC")
+
+  val predictions = lrModel.transform(validData)
+
+  val accuracy = evaluator_binary.evaluate(predictions)
+  print(accuracy)
 }

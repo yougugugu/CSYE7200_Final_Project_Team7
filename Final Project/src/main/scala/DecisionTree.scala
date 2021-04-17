@@ -1,10 +1,8 @@
-import org.apache.spark.ml.feature.VectorAssembler
-import org.apache.spark.ml.Pipeline
-import org.apache.spark.ml.classification.DecisionTreeClassificationModel
 import org.apache.spark.ml.classification.DecisionTreeClassifier
 import org.apache.spark.ml.evaluation.BinaryClassificationEvaluator
+import org.apache.spark.ml.feature.VectorAssembler
 
-object DecisionTree extends App{
+object DecisionTree {
   val train = ProcessData.train
   val valid = ProcessData.valid
   val assembler = new VectorAssembler()
