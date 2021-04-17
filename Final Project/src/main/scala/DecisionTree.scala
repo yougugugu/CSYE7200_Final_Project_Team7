@@ -4,7 +4,7 @@ import org.apache.spark.ml.classification.DecisionTreeClassificationModel
 import org.apache.spark.ml.classification.DecisionTreeClassifier
 import org.apache.spark.ml.evaluation.BinaryClassificationEvaluator
 
-object DecisionTree extends App{
+object DecisionTree {
   val train = ProcessData.train
   val valid = ProcessData.valid
   val assembler = new VectorAssembler()

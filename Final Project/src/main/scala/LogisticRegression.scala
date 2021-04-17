@@ -1,7 +1,7 @@
 import org.apache.spark.ml.classification.LogisticRegression
 import org.apache.spark.ml.feature.VectorAssembler
 
-object LogisticRegression extends App {
+object LogisticRegression {
   val train = ProcessData.train
   val valid = ProcessData.valid
   val assembler = new VectorAssembler()
