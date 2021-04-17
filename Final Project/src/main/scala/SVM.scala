@@ -1,6 +1,6 @@
 import org.apache.spark.ml.classification.LinearSVC
-import org.apache.spark.ml.feature.VectorAssembler
 import org.apache.spark.ml.evaluation.BinaryClassificationEvaluator
+import org.apache.spark.ml.feature.VectorAssembler
 
 object SVM extends App {
   val train = ProcessData.train

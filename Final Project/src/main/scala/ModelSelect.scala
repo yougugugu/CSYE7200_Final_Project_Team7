@@ -1,7 +1,3 @@
-
-
-object ModelSelect extends App {
+object ModelSelect {
   val predict = ProcessData.predData
-
-
 }
