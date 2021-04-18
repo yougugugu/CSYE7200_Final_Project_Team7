@@ -1,7 +1,7 @@
 import org.apache.spark.sql.{DataFrame, SparkSession}
 import org.apache.spark.ml.feature.{StandardScaler, StandardScalerModel, VectorAssembler}
 
-object ProcessData {
+object ProcessData extends App {
 
   val spark: SparkSession = SparkSession
     .builder()
