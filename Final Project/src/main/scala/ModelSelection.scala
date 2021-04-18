@@ -1,24 +1,30 @@
-import org.apache.spark.ml.classification.{ClassificationModel, DecisionTreeClassificationModel, FMClassificationModel, GBTClassificationModel, LinearSVCModel, LogisticRegressionModel, MultilayerPerceptronClassificationModel, RandomForestClassificationModel}
-import org.apache.spark.ml.linalg
-import org.apache.spark.ml.util.MLWritable
+import org.apache.spark.ml.{Pipeline, PipelineModel}
 import org.apache.spark.sql.DataFrame
 
 object ModelSelection {
   val accuracyMap = Map("DT" -> DT.acc, "FM" -> FM.acc, "GBT" -> GBT.acc, "LR" -> LR.acc, "MLP" -> MLP.acc, "RF" -> RF.acc, "SVM" -> SVM.acc)
 
-  val maxAccuracyKey: String = accuracyMap.maxBy(_._2) match {case (k,v) => k}
-
-  def findBestModel(k: String) = k match {
-    case "DT" => DT.dtModel
-    case "FM" => FM.fmModel
-    case "GBT" => GBT.gbtModel
-    case "LR" => LR.lrModel
-    case "MLP" => MLP.mlpModel
-    case "RF" => RF.rfModel
-    case "SVM" => SVM.svmModel
+  val maxAccuracyKey: String = accuracyMap.maxBy(_._2) match {
+    case (k, v) => k
   }
 
-  val bestModel = findBestModel(maxAccuracyKey)
+  def findBestModel(k: String) = k match {
+    case "DT" => DT.dt
+    case "FM" => FM.fm
+    case "GBT" => GBT.gbt
+    case "LR" => LR.lr
+    case "MLP" => MLP.mlp
+    case "RF" => RF.rf
+    case "SVM" => SVM.svm
+  }
+
+  val pipeline: Pipeline = new Pipeline().setStages(Array(findBestModel(maxAccuracyKey)))
+  val bestModel: PipelineModel = pipeline.fit(ProcessData.assTrain)
+  bestModel.save("./bestModel")
+  //  val bestModel = findBestModel(maxAccuracyKey)
+  //  pipeline.write.overwrite.save("./bestModel")
+
+  val loadModel: PipelineModel = PipelineModel.load("./bestModel")
 
   val testPred: DataFrame = bestModel.transform(ProcessData.assTest)
 
