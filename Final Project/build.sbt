@@ -9,3 +9,5 @@ libraryDependencies += "org.apache.spark" %% "spark-core" % "3.1.1"
 libraryDependencies += "org.apache.spark" %% "spark-mllib" % "3.1.1"
 
 libraryDependencies += "org.apache.spark" %% "spark-sql" % "3.1.1"
+
+libraryDependencies += "org.scalatest" %% "scalatest" % "3.2.7" % "test"
