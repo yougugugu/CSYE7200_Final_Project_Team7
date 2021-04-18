@@ -9,7 +9,7 @@ object RF {
     .setNumTrees(64)
     .setSeed(3333L)
 
-  val rfModel: RandomForestClassificationModel =rf.fit(ProcessData.assTrain)
+  val rfModel: RandomForestClassificationModel = rf.fit(ProcessData.assTrain)
 
   val validPred: DataFrame = rfModel.transform(ProcessData.assValid)
 
