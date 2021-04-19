@@ -10,8 +10,8 @@ object SVM {
    * Set parameters for support vector machine
    */
   val svm: LinearSVC = new LinearSVC()
-    .setMaxIter(100)
-    .setRegParam(0.1)
+    .setMaxIter(10)
+    .setRegParam(0)
     .setLabelCol("Result")
     .setFeaturesCol("features")
 

@@ -12,6 +12,7 @@ object DT {
   val dt: DecisionTreeClassifier = new DecisionTreeClassifier()
     .setLabelCol("Result")
     .setFeaturesCol("features")
+    .setMinInstancesPerNode(25)
 
   /**
    * Fit decision tree with training dataset

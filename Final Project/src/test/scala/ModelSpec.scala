@@ -30,7 +30,7 @@ class ModelSpec extends AnyFlatSpec with Matchers {
 
   "DT Model accuracy" should "greater than 0.6" in{
     val DTacc = DT.acc
-    DTacc should be > 0.6
+    DTacc should be > 0.7
   }
 
   "SVM Model accuracy" should "greater than 0.7" in{
@@ -71,6 +71,10 @@ class ModelSpec extends AnyFlatSpec with Matchers {
   "RF features number" should "equal to 9" in {
     val RFnf = RF.rfModel.featureImportances.size
     RFnf should equal(9)
+  }
+
+  "best model" should "work for accuracy > 70%" in {
+    ModelSelection.testAccuracy > 0.7
   }
 
 }
