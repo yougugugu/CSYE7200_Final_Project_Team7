@@ -10,9 +10,9 @@ object LR {
    * Set parameters for logistic regression
    */
   val lr: LogisticRegression = new LogisticRegression()
-    .setMaxIter(10)
-    .setRegParam(0.3)
-    .setElasticNetParam(0.8)
+    .setMaxIter(100)
+    .setRegParam(0)
+    .setElasticNetParam(1)
     .setLabelCol("Result")
 
   /**

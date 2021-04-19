@@ -12,7 +12,7 @@ object MLP {
   val mlp: MultilayerPerceptronClassifier = new MultilayerPerceptronClassifier()
     .setLabelCol("Result")
     .setFeaturesCol("features")
-    .setLayers(Array(9, 7, 6, 2))
+    .setLayers(Array(9, 8, 2))
     .setBlockSize(128)
     .setSeed(4444L)
     .setMaxIter(100)
