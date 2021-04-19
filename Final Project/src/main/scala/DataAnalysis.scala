@@ -1,11 +1,16 @@
 import org.apache.spark.mllib.linalg._
 import org.apache.spark.mllib.stat.Statistics
+import org.apache.spark.sql.functions.monotonically_increasing_id
 
+/**
+ * This object is to do data analysis.
+ */
 object DataAnalysis extends App {
-  val preData = ProcessData.predData
 
-  //calculate the correlation
-  val rddpreD = preData.rdd.map{row =>
+  /**
+   * Read and convert data.
+   */
+  val rddpreD = ProcessData.predData.rdd.map{row =>
     val first = row.getAs[Integer]("Result")
     val second = row.getAs[Integer]("TeamDiff")
     val third = row.getAs[Integer]("TopDiff")
@@ -19,8 +24,15 @@ object DataAnalysis extends App {
     Vectors.dense(first.toDouble,second.toDouble,third.toDouble,fourth.toDouble,fifth.toDouble,sixth.toDouble,seventh.toDouble,eighth.toDouble,ninth.toDouble,tenth.toDouble)
   }
 
+  /**
+   * Compute correlation.
+   */
   val correlMatrix = Statistics.corr(rddpreD)
 
+
+  /**
+   * Convert correlation matrix to dataframe
+   */
   import ProcessData.spark.implicits._
   val cols = (0 until correlMatrix.numCols)
 
@@ -28,6 +40,9 @@ object DataAnalysis extends App {
     .colIter.toSeq
     .map(_.toArray)
     .toDF("arr")
+
+  val col = List("Result","TeamDiff", "TopDiff", "JunDiff", "MidDiff", "ADCDiff", "SupDiff", "Dragons", "Structures", "Kills").toDF("Cor-Matrix")
+    .withColumn("id1", monotonically_increasing_id())
 
   val cor = cols.foldLeft(df)((df, i) => df.withColumn("_" + (i+1), $"arr"(i)))
     .drop("arr")
@@ -41,7 +56,10 @@ object DataAnalysis extends App {
     .withColumnRenamed("_8","Dragons")
     .withColumnRenamed("_9","Structures")
     .withColumnRenamed("_10","Kills")
+    .withColumn("id2", monotonically_increasing_id())
 
-  cor.show(false)
-
+  col.join(cor, col("id1") === cor("id2"), "inner")
+    .drop("id1")
+    .drop("id2")
+    .show(false)
 }
