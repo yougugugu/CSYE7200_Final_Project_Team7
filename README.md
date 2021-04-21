@@ -15,7 +15,7 @@ Team member:
 
 ## Abstract
 
-
+Our goal is to predict the game result of League of Legends, using the information of first 15 minutes.The dataset is from [Kaggle](https://www.kaggle.com/chuckephron/leagueoflegends). We preprocessed the data and train 7 different models(Decision Tree, SVM, Logistic Regression, etc) with 9 features(Gold Diff, Kills, Structures, etc). Our program can automatically select the best model base on accuracy. Finally, we implement the UI by Play Framework. The users can input the information of first 15 minutes and then get the result of the match.
 
 ## Getting Started
 
@@ -34,6 +34,7 @@ Run the tests ```sbt test``` in each terminals
 
 ## Built With
 
+* [Scala](https://www.scala-lang.org/) - The program language to implement the program.
 * [IntelliJ IDEA](https://www.jetbrains.com/idea/) - The IDE to development the system.
 * [Spark](https://databricks.com/spark/about) - The framework to develop the Machine Learning process
 * [Play](https://www.playframework.com/) - The framework to develop the UI with Scala
