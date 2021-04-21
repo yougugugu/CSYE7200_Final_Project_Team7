@@ -13,11 +13,11 @@ Team member:
 | [@Lin Zhu](https://github.com/Linzzz81)     | 001066973 |
 | [@Yihao Gu](https://github.com/yougugugu)   | 001305641 |
 
-## Introduction
+## Abstract
 
 
 
-## GettingStarted
+## Getting Started
 
 First , clone or download the repository to local
 
@@ -25,5 +25,16 @@ Open the **Final Project** file with ***IDEA***. Run ```Main.scala``` in ```Fina
 
 Another version of our project using ```Play Framework``` is also provided. Open the ***FinalProjectPlay/finalproject*** file with ***IDEA***. Open terminal and ```sbt run``` to run the project. Open the browser and enter ```localhost:9000```. It will take 10-30 minutes to train all machine learning models when you first access this website. Please refresh the website until all the training process is done. Follow the website instruction to input required features and the predictions will show under the website.
 
-## Result
+
+## Running the tests
+
+Open the **Final Project** and ***FinalProjectPlay/finalproject***  files with ***IDEA***.
+
+Run the tests ```sbt test``` in each terminals
+
+## Built With
+
+* [IntelliJ IDEA](https://www.jetbrains.com/idea/) - The IDE to development the system.
+* [Spark](https://databricks.com/spark/about) - The framework to develop the Machine Learning process
+* [Play](https://www.playframework.com/) - The framework to develop the UI with Scala
 
