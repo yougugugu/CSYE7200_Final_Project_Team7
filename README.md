@@ -19,11 +19,11 @@ Our goal is to predict the game result of League of Legends, using the informati
 
 ## Getting Started
 
-First , clone or download the repository to local
+First , clone or download the repository to local.
 
 Open the **Final Project** file with ***IDEA***. Run ```Main.scala``` in ```Final Project/src/main/scala/Main.scala```.It will take 10-20 minutes to train all machine learning models when you first run ```Main.scala```. Follow the instruction in console to input required features and system will return predictions.
 
-Another version of our project using ```Play Framework``` is also provided. Open the ***FinalProjectPlay/finalproject*** file with ***IDEA***. Open terminal and ```sbt run``` to run the project. Open the browser and enter ```localhost:9000```. It will take 10-30 minutes to train all machine learning models when you first access this website. Please refresh the website until all the training process is done. Follow the website instruction to input required features and the predictions will show under the website.
+Another version of our project using ```Play Framework``` is also provided. Open the ***FinalProjectPlay/finalproject*** file with ***IDEA***. Open terminal and ```sbt run``` to run the project. Open the browser and enter ```localhost:9000```. It will take 20-40 minutes to train all machine learning models when you first access this website. Please refresh the website until all the training process is done. Follow the website instruction to input required features and the predictions will show under the website.
 
 
 ## Running the tests
