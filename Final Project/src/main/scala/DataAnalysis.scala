@@ -1,6 +1,9 @@
 import org.apache.spark.mllib.linalg._
 import org.apache.spark.mllib.stat.Statistics
+import org.apache.spark.sql.DataFrame
 import org.apache.spark.sql.functions.monotonically_increasing_id
+import org.apache.spark.sql.functions._
+
 
 /**
  * This object is to do data analysis.
@@ -29,7 +32,6 @@ object DataAnalysis extends App {
    */
   val correlMatrix = Statistics.corr(rddpreD)
 
-
   /**
    * Convert correlation matrix to dataframe
    */
@@ -40,9 +42,6 @@ object DataAnalysis extends App {
     .colIter.toSeq
     .map(_.toArray)
     .toDF("arr")
-
-  val col = List("Result","TeamDiff", "TopDiff", "JunDiff", "MidDiff", "ADCDiff", "SupDiff", "Dragons", "Structures", "Kills").toDF("Cor-Matrix")
-    .withColumn("id1", monotonically_increasing_id())
 
   val cor = cols.foldLeft(df)((df, i) => df.withColumn("_" + (i+1), $"arr"(i)))
     .drop("arr")
@@ -56,10 +55,29 @@ object DataAnalysis extends App {
     .withColumnRenamed("_8","Dragons")
     .withColumnRenamed("_9","Structures")
     .withColumnRenamed("_10","Kills")
+
+  /**
+   * Round data in dataframe to 2 decimal precisions
+   *
+   * @param df dataframe needed to be round
+   * @param roundCols column names that needed to round
+   * @return dataframe with 2 decimal precisions
+   */
+  def doubleToRound(df: DataFrame, roundCols: Array[String]): DataFrame =
+    roundCols.foldLeft(df)((acc, c) => acc.withColumn(c, round(col(c), 2)))
+
+  val doubleCor = doubleToRound(cor, Array("Result","TeamDiff","TopDiff","JunDiff","MidDiff","ADCDiff","SupDiff","Dragons","Structures","Kills"))
     .withColumn("id2", monotonically_increasing_id())
 
-  col.join(cor, col("id1") === cor("id2"), "inner")
+  /**
+   * Add column names that match row name in correlation matrix
+   */
+  val colName = List("Result","TeamDiff", "TopDiff", "JunDiff", "MidDiff", "ADCDiff", "SupDiff", "Dragons", "Structures", "Kills").toDF("Cor-Matrix")
+    .withColumn("id1", monotonically_increasing_id())
+
+  colName.join(doubleCor, colName("id1") === doubleCor("id2"), "inner")
     .drop("id1")
     .drop("id2")
     .show(false)
+
 }
