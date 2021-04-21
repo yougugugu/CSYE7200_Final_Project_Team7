@@ -5,11 +5,10 @@ This project is designed as the final project of Northeastern University COE-CSY
 
 ## Table of Contents
 
-- [Introduction](https://github.com/ljch9725/INFO6205_Team_111/blob/master/README.md#introduction)
-- [DevelopingEnvironment](https://github.com/ljch9725/INFO6205_Team_111/blob/master/README.md#GettingStarted)
-- [Result](https://github.com/ljch9725/INFO6205_Team_111/blob/master/README.md#Result)
-- [Team Member](https://github.com/ljch9725/INFO6205_Team_111/blob/master/README.md#TeamMember)
-- [License](https://github.com/ljch9725/INFO6205_Team_111/blob/master/README.md#license)
+- [Introduction](https://github.com/ljch9725/CSYE7200_Final_Project_Team7blob/master/README.md#introduction)
+- [DevelopingEnvironment](https://github.com/ljch9725/CSYE7200_Final_Project_Team7blob/master/README.md#GettingStarted)
+- [Result](https://github.com/ljch9725/CSYE7200_Final_Project_Team7blob/master/README.md#Result)
+- [Team Member](https://github.com/ljch9725/CSYE7200_Final_Project_Team7blob/master/README.md#TeamMember)
 
 ## Introduction
 
